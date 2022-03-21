@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 import nltk
-# nltk.download('punkt')
+nltk.download('punkt')
 from bs4 import BeautifulSoup
 from newspaper import Article
 from newscatcher import Newscatcher, describe_url, urls
@@ -78,13 +78,9 @@ class news_crawl:
                         news_base_data.append(temp)
 
             except:
-                print(base_url, topic, title)
+                print("not_available", base_url, topic, title)
 
         df_news_base_data = pd.DataFrame(news_base_data, columns=['source','topic','title','publish_date','link'])
-
-        # filter last 24 hour news
-        df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
-        df_news_base_data = df_news_base_data.reset_index(drop=True)
 
         df_news_base_data['date'] = datetime.today().strftime("%Y-%m-%d")
         df_news_base_data['keyword'] = ''
@@ -92,14 +88,20 @@ class news_crawl:
 
         try:
             for i in df_news_base_data.index:
-                print(i, df_news_base_data.loc[i,'source'], df_news_base_data.loc[i,'title'])
-                
                 # datetime conversion for publish date to 2022-03-22 09:00 format
                 _str_datetime = df_news_base_data.loc[i,'publish_date'][:22]
                 _stf_datetime = datetime.strptime(_str_datetime, '%a, %d %b %Y %H:%M')
                 datetime_str = datetime.strftime(_stf_datetime, '%Y-%m-%d %H:%M')
-                
                 df_news_base_data.loc[i,'publish_date'] = datetime_str
+
+            df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
+            df_news_base_data = df_news_base_data.reset_index(drop=True)
+        except:
+            print("publish date columns something wrong")
+
+        try:
+            for i in df_news_base_data.index:
+                print(i, df_news_base_data.loc[i,'source'], df_news_base_data.loc[i,'title'])
 
                 url = df_news_base_data.loc[i, 'link']
                 article = Article(df_news_base_data.loc[i,'link'], language='en')
@@ -121,7 +123,9 @@ class news_crawl:
             print(i, df_news_base_data.loc[i,'source'], df_news_base_data.loc[i,'title'])
         
         # filter last 24 hour news
-        df_news_base_data = df_news_base_data[['source','topic','title','publish_date','link','date','keyword','text']]
+        df_news_base_data = df_news_base_data.reset_index(drop=True)
+
+        df_news_base_data = df_news_base_data[['date','publish_date','source','topic','title','keyword','link','text']]
         df_news_base_data.to_excel(os.path.join(self.news_dir,f'{self.now.strftime("%Y-%m-%d")}_news.xlsx'))
         return df_news_base_data
         
