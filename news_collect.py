@@ -116,7 +116,7 @@ class news_crawl:
                 for keyword in keywords:
                     keyword_str = keyword_str + keyword + '/'
 
-                df_news_base_data.loc[i ,'keyword'] = keyword_str
+                df_news_base_data.loc[i ,'keywords'] = keyword_str
                 df_news_base_data.loc[i ,'text'] = text
                     
         except:
