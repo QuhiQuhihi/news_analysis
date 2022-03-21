@@ -81,8 +81,10 @@ class news_crawl:
                 print(base_url, topic, title)
 
         df_news_base_data = pd.DataFrame(news_base_data, columns=['source','topic','title','publish_date','link'])
+
+        # filter last 24 hour news
         df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
-        # df_news_base_data = df_news_base_data.reset_index(drop=True)
+        df_news_base_data = df_news_base_data.reset_index(drop=True)
 
         df_news_base_data['date'] = datetime.today().strftime("%Y-%m-%d")
         df_news_base_data['keyword'] = ''
@@ -119,7 +121,6 @@ class news_crawl:
             print(i, df_news_base_data.loc[i,'source'], df_news_base_data.loc[i,'title'])
         
         # filter last 24 hour news
-        # df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
         df_news_base_data = df_news_base_data[['source','topic','title','publish_date','link','date','keyword','text']]
         df_news_base_data.to_excel(os.path.join(self.news_dir,f'{self.now.strftime("%Y-%m-%d")}_news.xlsx'))
         return df_news_base_data
