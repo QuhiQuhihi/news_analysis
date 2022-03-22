@@ -94,8 +94,10 @@ class news_crawl:
                 datetime_str = datetime.strftime(_stf_datetime, '%Y-%m-%d %H:%M')
                 df_news_base_data.loc[i,'publish_date'] = datetime_str
 
+            print('news_base_data collection completed')
             df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
             df_news_base_data = df_news_base_data.reset_index(drop=True)
+            print('news_base_data filter completed')
         except:
             print("publish date columns something wrong")
 
@@ -116,7 +118,7 @@ class news_crawl:
                 for keyword in keywords:
                     keyword_str = keyword_str + keyword + '/'
 
-                df_news_base_data.loc[i ,'keywords'] = keyword_str
+                df_news_base_data.loc[i ,'keyword'] = keyword_str
                 df_news_base_data.loc[i ,'text'] = text
                     
         except:
