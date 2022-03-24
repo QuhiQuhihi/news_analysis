@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import sqlite3
 import calendar
 from datetime import datetime, timedelta
@@ -24,16 +25,18 @@ class news_crawl:
         
         self.news_dir = os.path.join(os.getcwd(),'data','news')
         
-        self.news_topic = ['tech', 'news', 'business', 'science', 'finance', 'food', 'politics', 'economics', 'travel', 'entertainment', 'music', 'sport', 'world']
+        self.news_topic = ['tech', 'news', 'business', 'science', 'finance', 'politics', 'economics',  'world']
         self.news_url = {
                         'newyork_times': 'nytimes.com',
                         'washington_post':'washingtonpost.com',
-                        # 'wallstreet_journal':'wsj.com',
-                        # 'bloomberg':'bloomberg.com',
-                        'cnn':'cnn.com',
-                        'cnbc':'cnbc.com',
-                        'financial_times':'ft.com/',
-                        # 'reuters':'reuters.com'
+                        'cnn':'edition.cnn.com',
+                        'fox': 'foxnews.com',
+                        'bbc' : 'bbc.co.uk',
+                        'cnbc': 'cnbc.com',
+                        'financial_times':'ft.com',
+                        'yahoo':'yahoo.com',
+                        'guardian':'theguardian.com',
+                        'telegraph':'telegraph.co.uk',
                     }
         self.news_url_list = list(self.news_url.values())
 
@@ -78,7 +81,7 @@ class news_crawl:
                         news_base_data.append(temp)
 
             except:
-                print("not_available", base_url, topic, title)
+                print("not_available", base_url)
 
         df_news_base_data = pd.DataFrame(news_base_data, columns=['source','topic','title','publish_date','link'])
 
@@ -98,6 +101,7 @@ class news_crawl:
             df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
             df_news_base_data = df_news_base_data.reset_index(drop=True)
             print('news_base_data filter completed')
+            time.sleep(1)
         except:
             print("publish date columns something wrong")
 
@@ -120,9 +124,10 @@ class news_crawl:
 
                 df_news_base_data.loc[i ,'keyword'] = keyword_str
                 df_news_base_data.loc[i ,'text'] = text
+                time.sleep(1)
                     
         except:
-            print(i, df_news_base_data.loc[i,'source'], df_news_base_data.loc[i,'title'])
+            print(i, url, ' not available ')
         
         # filter last 24 hour news
         df_news_base_data = df_news_base_data.reset_index(drop=True)

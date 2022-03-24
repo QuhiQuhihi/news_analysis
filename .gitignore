@@ -3,4 +3,5 @@
 /.venv_news
 /.env_news
 /__pycache__
+config.py
 
