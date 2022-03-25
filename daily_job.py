@@ -27,7 +27,7 @@ class daily_job:
         news_data = news_crawl.crawl_news_data()
         print("--- news crawling finished ---")
         print("--- insert to news_analysis started ---")
-        insert_news_data.db_conn_test(news_data)
+        db_conn_test(news_data)
         print("--- insert to news_analysis finished ---")
 
         print("--- insert to news_analysis finished ---")
