@@ -133,6 +133,7 @@ class news_crawl:
         df_news_base_data = df_news_base_data.reset_index(drop=True)
 
         df_news_base_data = df_news_base_data[['date','publish_date','source','topic','title','keyword','link','text']]
+        df_news_base_data.columns = ['date','publish_date','news_source','new_topic','news_title','news_keyword','news_link','news_text'] 
         df_news_base_data.to_excel(os.path.join(self.news_dir,f'{self.now.strftime("%Y-%m-%d")}_news.xlsx'))
         return df_news_base_data
         

@@ -46,12 +46,12 @@ class insert_news_data():
                     dtype={
                         'date': sqlalchemy.VARCHAR(100),
                         'publish_date': sqlalchemy.DATETIME(),
-                        'source': sqlalchemy.VARCHAR(100),
-                        'topic': sqlalchemy.VARCHAR(100),
-                        'title': sqlalchemy.VARCHAR(100),
-                        'keyword': sqlalchemy.VARCHAR(100),
-                        'link': sqlalchemy.VARCHAR(100),
-                        'text' : sqlalchemy.TEXT(),
+                        'news_source': sqlalchemy.VARCHAR(100),
+                        'news_topic': sqlalchemy.VARCHAR(100),
+                        'news_title': sqlalchemy.VARCHAR(100),
+                        'news_keyword': sqlalchemy.VARCHAR(100),
+                        'news_link': sqlalchemy.VARCHAR(100),
+                        'news_text' : sqlalchemy.TEXT(),
                         'created_at':sqlalchemy.DATETIME(),
                         'updated_at': sqlalchemy.DATETIME()
                     })
