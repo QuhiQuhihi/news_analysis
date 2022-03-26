@@ -18,10 +18,10 @@ class news_crawl:
     def __init__(self):
         self.now = datetime.today()
         self.now_1d = datetime.today() - timedelta(days=1)
+
         self.today = datetime.today().strftime("%Y-%m-%d %H:%M")
         self.yesterday = (self.now - timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
-
-        # self.yesterday = datetime.today() - timedelta(days=1)
+        self.yesterday_2 = (self.now - timedelta(days=2)).strftime("%Y-%m-%d %H:%M")
         
         self.news_dir = os.path.join(os.getcwd(),'data','news')
         
@@ -40,9 +40,7 @@ class news_crawl:
                     }
         self.news_url_list = list(self.news_url.values())
 
-
     def crawl_news_data(self):
-
     # [source, topic, title, publish_date, link, text]
     # link = news_url, newspaper3k package will load news contents
     # link from newscatcher, text from newspaper3k
@@ -83,11 +81,11 @@ class news_crawl:
             except:
                 print("not_available", base_url)
 
-        df_news_base_data = pd.DataFrame(news_base_data, columns=['source','topic','title','publish_date','link'])
+        df_news_base_data = pd.DataFrame(news_base_data, columns=['news_source','news_topic','news_title','publish_date','news_link'])
 
         df_news_base_data['date'] = datetime.today().strftime("%Y-%m-%d")
-        df_news_base_data['keyword'] = ''
-        df_news_base_data['text'] = ''
+        df_news_base_data['news_keyword'] = ''
+        df_news_base_data['news_text'] = ''
 
         try:
             for i in df_news_base_data.index:
@@ -98,7 +96,7 @@ class news_crawl:
                 df_news_base_data.loc[i,'publish_date'] = datetime_str
 
             print('news_base_data collection completed')
-            df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
+            df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday_2}' and publish_date < '{self.now}'")
             df_news_base_data = df_news_base_data.reset_index(drop=True)
             print('news_base_data filter completed')
             time.sleep(1)
@@ -107,10 +105,10 @@ class news_crawl:
 
         try:
             for i in df_news_base_data.index:
-                print(i, df_news_base_data.loc[i,'source'], df_news_base_data.loc[i,'title'])
+                print(i, df_news_base_data.loc[i,'news_source'], df_news_base_data.loc[i,'news_title'])
 
-                url = df_news_base_data.loc[i, 'link']
-                article = Article(df_news_base_data.loc[i,'link'], language='en')
+                url = df_news_base_data.loc[i, 'news_link']
+                article = Article(df_news_base_data.loc[i,'news_link'], language='en')
 
                 article.download()
                 article.parse()
@@ -122,8 +120,8 @@ class news_crawl:
                 for keyword in keywords:
                     keyword_str = keyword_str + keyword + '/'
 
-                df_news_base_data.loc[i ,'keyword'] = keyword_str
-                df_news_base_data.loc[i ,'text'] = text
+                df_news_base_data.loc[i ,'news_keyword'] = keyword_str
+                df_news_base_data.loc[i ,'news_text'] = text
                 time.sleep(1)
                     
         except:
@@ -132,9 +130,8 @@ class news_crawl:
         # filter last 24 hour news
         df_news_base_data = df_news_base_data.reset_index(drop=True)
 
-        df_news_base_data = df_news_base_data[['date','publish_date','source','topic','title','keyword','link','text']]
-        df_news_base_data.columns = ['date','publish_date','news_source','new_topic','news_title','news_keyword','news_link','news_text'] 
-        df_news_base_data.to_excel(os.path.join(self.news_dir,f'{self.now.strftime("%Y-%m-%d")}_news.xlsx'))
+        df_news_base_data = df_news_base_data[['date','publish_date','news_source','news_topic','news_title','news_keyword','news_link','news_text']]
+        # df_news_base_data.to_excel(os.path.join(self.news_dir,f'{self.now.strftime("%Y-%m-%d")}_news.xlsx'))
         return df_news_base_data
         
 if __name__=="__main__":
