@@ -96,7 +96,7 @@ class news_crawl:
                 df_news_base_data.loc[i,'publish_date'] = datetime_str
 
             print('news_base_data collection completed')
-            df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday_2}' and publish_date < '{self.now}'")
+            df_news_base_data = df_news_base_data.query(f"publish_date > '{self.yesterday}' and publish_date < '{self.now}'")
             df_news_base_data = df_news_base_data.reset_index(drop=True)
             print('news_base_data filter completed')
             time.sleep(1)
