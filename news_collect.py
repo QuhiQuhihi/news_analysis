@@ -105,8 +105,6 @@ class news_crawl:
 
         try:
             for i in df_news_base_data.index:
-                print(i, df_news_base_data.loc[i,'news_source'], df_news_base_data.loc[i,'news_title'])
-
                 url = df_news_base_data.loc[i, 'news_link']
                 article = Article(df_news_base_data.loc[i,'news_link'], language='en')
 
